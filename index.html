@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shape Hunter: Star Clash</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="brand" id="homeBtn" type="button" aria-label="Voltar ao lobby">
+          <span class="brand-mark">SH</span>
+          <span>
+            <strong>Shape Hunter</strong>
+            <small>Star Clash</small>
+          </span>
+        </button>
+
+        <div class="wallet" aria-label="Carteira">
+          <span class="coin"></span>
+          <strong id="coinsValue">0</strong>
+          <span class="gem"></span>
+          <strong id="gemsValue">0</strong>
+        </div>
+      </header>
+
+      <main>
+        <section class="screen active" id="lobbyScreen">
+          <div class="hero">
+            <div class="hero-copy">
+              <span class="season-pill">Temporada Neon Shapes</span>
+              <h1>Caça formas, ganha troféus e domina a arena.</h1>
+              <p>Agora com loja em cartões, skins raras, modos separados e recompensas mais justas.</p>
+              <div class="hero-actions">
+                <button class="primary big" id="quickPlayBtn" type="button">Jogar agora</button>
+                <button class="secondary big" data-open="shopScreen" type="button">Abrir loja</button>
+              </div>
+            </div>
+            <div class="fighter-stage" aria-label="Personagem selecionado">
+              <canvas id="heroCanvas" width="360" height="360"></canvas>
+              <div class="selected-card">
+                <span id="selectedRarity">Inicial</span>
+                <strong id="selectedSkinName">Rookie Blue</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel player-panel">
+              <div>
+                <span class="label">Jogador</span>
+                <h2 id="playerNameValue">Hunter</h2>
+              </div>
+              <div class="rank-badge">
+                <span>Liga</span>
+                <strong id="leagueValue">Bronze I</strong>
+              </div>
+              <div class="stat-row">
+                <span>Troféus</span>
+                <strong id="trophyValue">0</strong>
+              </div>
+              <div class="stat-row">
+                <span>Vitórias</span>
+                <strong id="winsValue">0</strong>
+              </div>
+              <div class="stat-row">
+                <span>Nivel</span>
+                <strong id="levelValue">1</strong>
+              </div>
+              <div class="progress-track"><span id="xpBar"></span></div>
+              <button class="secondary" data-open="profileScreen" type="button">Perfil</button>
+            </article>
+
+            <article class="panel event-panel">
+              <div>
+                <span class="label">Evento ativo</span>
+                <h2 id="featuredModeTitle">Caça Clássica</h2>
+                <p id="featuredModeDesc">Pegue alvos, desvie dos perigos e segure o combo.</p>
+              </div>
+              <button class="primary" id="featuredPlayBtn" type="button">Entrar</button>
+              <div class="event-banner" id="eventBanner">Noite Neon ativa: recompensas e raros especiais.</div>
+            </article>
+
+            <article class="panel missions-panel">
+              <div class="panel-title">
+                <h2>Missões</h2>
+                <button class="icon-button" id="resetDataBtn" type="button" title="Reiniciar progresso">↻</button>
+              </div>
+              <div id="missionsList" class="missions-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="modesScreen">
+          <div class="section-head">
+            <div>
+              <span class="label">Escolhe a batalha</span>
+              <h2>Modos</h2>
+            </div>
+            <button class="secondary" data-open="lobbyScreen" type="button">Lobby</button>
+          </div>
+          <div class="mode-grid" id="modeGrid"></div>
+        </section>
+
+        <section class="screen" id="shopScreen">
+          <div class="section-head">
+            <div>
+              <span class="label">Cartões organizados</span>
+              <h2>Loja</h2>
+            </div>
+            <div class="shop-tabs" role="tablist" aria-label="Categorias da loja">
+              <button class="tab active" data-filter="all" type="button">Tudo</button>
+              <button class="tab" data-filter="base" type="button">Skins</button>
+              <button class="tab" data-filter="adm" type="button">ADM</button>
+              <button class="tab" data-filter="limited" type="button">Limitadas</button>
+              <button class="tab" data-filter="coins" type="button">Moedas</button>
+            </div>
+          </div>
+          <div class="shop-tools">
+            <select id="shopSort">
+              <option value="featured">Destaques</option>
+              <option value="priceAsc">Preco menor</option>
+              <option value="priceDesc">Preco maior</option>
+              <option value="rarity">Raridade</option>
+              <option value="owned">Compradas</option>
+            </select>
+            <button class="secondary" id="freeChestBtn" type="button">Cofre gratis</button>
+          </div>
+          <div class="shop-grid" id="shopGrid"></div>
+        </section>
+
+        <section class="screen" id="profileScreen">
+          <div class="section-head">
+            <div>
+              <span class="label">Progresso</span>
+              <h2>Perfil Hunter</h2>
+            </div>
+            <button class="secondary" data-open="lobbyScreen" type="button">Lobby</button>
+          </div>
+          <div class="profile-grid">
+            <article class="panel profile-card">
+              <h3 id="profileName">Hunter</h3>
+              <div class="stat-row"><span>Nivel</span><strong id="profileLevel">1</strong></div>
+              <div class="stat-row"><span>XP</span><strong id="profileXp">0/100</strong></div>
+              <div class="stat-row"><span>Melhor score</span><strong id="bestScoreValue">0</strong></div>
+              <div class="stat-row"><span>Maior combo</span><strong id="bestComboValue">x1</strong></div>
+              <div class="stat-row"><span>Figuras cacadas</span><strong id="shapeCaughtValue">0</strong></div>
+            </article>
+            <article class="panel profile-card">
+              <h3>Conquistas</h3>
+              <div id="achievementsList" class="missions-list"></div>
+            </article>
+            <article class="panel profile-card">
+              <h3>Historico</h3>
+              <div id="historyList" class="missions-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="indexScreen">
+          <div class="section-head">
+            <div>
+              <span class="label">Arquivo Hunter</span>
+              <h2>Index de Figuras</h2>
+            </div>
+            <button class="secondary" data-open="lobbyScreen" type="button">Lobby</button>
+          </div>
+          <div class="index-grid" id="shapeIndexGrid"></div>
+        </section>
+
+        <section class="screen" id="adminScreen">
+          <div class="section-head">
+            <div>
+              <span class="label">Acesso privado</span>
+              <h2>Painel ADM</h2>
+            </div>
+            <button class="secondary" data-open="lobbyScreen" type="button">Sair do painel</button>
+          </div>
+
+          <div class="admin-lock" id="adminLock">
+            <div class="admin-lock-card">
+              <span class="label">Código ADM</span>
+              <h2>Área secreta</h2>
+              <p>Skins invisíveis, spawns secretos e comandos fortes ficam protegidos aqui.</p>
+              <div class="admin-login-row">
+                <input id="adminCodeInput" autocomplete="off" placeholder="Código secreto" type="password" />
+                <button class="primary" id="adminLoginBtn" type="button">Entrar</button>
+              </div>
+              <small>Dica: o código padrão é SHAPE-ADM.</small>
+            </div>
+          </div>
+
+          <div class="admin-grid" id="adminPanel">
+            <article class="panel admin-card">
+              <h3>Carteira</h3>
+              <div class="admin-actions">
+                <button class="primary" data-admin-money="coins:250" type="button">+250 moedas</button>
+                <button class="primary" data-admin-money="coins:1000" type="button">+1000 moedas</button>
+                <button class="secondary" data-admin-money="coins:-250" type="button">-250 moedas</button>
+                <button class="primary" data-admin-money="gems:25" type="button">+25 gemas</button>
+                <button class="secondary" data-admin-money="gems:-10" type="button">-10 gemas</button>
+                <button class="primary" data-admin-money="trophies:100" type="button">+100 troféus</button>
+              </div>
+            </article>
+
+            <article class="panel admin-card">
+              <h3>Spawn de Figuras</h3>
+              <p>Escolhe uma figura para aparecer na próxima partida.</p>
+              <div class="admin-actions" id="adminShapeButtons"></div>
+            </article>
+
+            <article class="panel admin-card">
+              <h3>Skins Secretas</h3>
+              <p>Estas skins não aparecem na loja. Só o ADM pode dar.</p>
+              <div class="admin-secret-list" id="adminSecretSkins"></div>
+            </article>
+
+            <article class="panel admin-card">
+              <h3>Códigos</h3>
+              <div class="admin-login-row">
+                <input id="promoInput" autocomplete="off" placeholder="Resgatar código" />
+                <button class="primary" id="redeemBtn" type="button">Resgatar</button>
+              </div>
+              <div class="admin-actions">
+                <button class="secondary" data-copy-code="HUNTER500" type="button">HUNTER500</button>
+                <button class="secondary" data-copy-code="SECRETADM" type="button">SECRETADM</button>
+                <button class="secondary" data-copy-code="GEMS25" type="button">GEMS25</button>
+              </div>
+              <div class="admin-login-row">
+                <input id="newCodeInput" autocomplete="off" placeholder="Novo codigo" />
+                <input id="newCodeRewardInput" autocomplete="off" placeholder="coins:300 ou gems:10" />
+                <button class="secondary" id="createCodeBtn" type="button">Criar</button>
+              </div>
+            </article>
+
+            <article class="panel admin-card">
+              <h3>Skin Custom</h3>
+              <div class="admin-login-row">
+                <input id="customSkinName" autocomplete="off" placeholder="Nome da skin" />
+                <input id="customSkinColor" autocomplete="off" placeholder="#ffcc00" />
+                <input id="customSkinAccent" autocomplete="off" placeholder="#40e0d0" />
+              </div>
+              <button class="primary" id="createSkinBtn" type="button">Criar skin secreta</button>
+            </article>
+
+            <article class="panel admin-card">
+              <h3>Evento e Regras</h3>
+              <div class="admin-login-row">
+                <input id="playerNameInput" autocomplete="off" placeholder="Nome do jogador" />
+                <button class="secondary" id="renameBtn" type="button">Renomear</button>
+              </div>
+              <div class="admin-login-row">
+                <input id="announcementInput" autocomplete="off" placeholder="Anuncio do lobby" />
+                <button class="secondary" id="announcementBtn" type="button">Publicar</button>
+              </div>
+              <div class="admin-actions">
+                <button class="secondary" id="toggleEventBtn" type="button">Evento especial</button>
+                <button class="secondary" id="toggleShopBanBtn" type="button">Ban loja</button>
+                <button class="secondary" id="moneyMultBtn" type="button">Multiplicador moedas</button>
+                <button class="secondary" id="difficultyBtn" type="button">Dificuldade global</button>
+              </div>
+            </article>
+
+            <article class="panel admin-card wide">
+              <h3>Controlo Total</h3>
+              <div class="admin-actions">
+                <button class="primary" id="unlockAllBtn" type="button">Desbloquear tudo</button>
+                <button class="secondary" id="restockBtn" type="button">Repor limitadas 5/5</button>
+                <button class="secondary" id="toggleTestBtn" type="button">Modo teste</button>
+                <button class="secondary" id="exportBtn" type="button">Exportar progresso</button>
+                <button class="secondary" id="importBtn" type="button">Importar progresso</button>
+                <button class="secondary" id="dailyRewardBtn" type="button">Recompensa diaria</button>
+              </div>
+              <textarea id="adminLog"></textarea>
+            </article>
+          </div>
+        </section>
+
+        <section class="screen" id="gameScreen">
+          <div class="game-layout">
+            <aside class="game-side">
+              <button class="secondary" id="exitGameBtn" type="button">Sair</button>
+              <div>
+                <span class="label">Modo</span>
+                <h2 id="gameModeName">Caça Clássica</h2>
+                <p id="gameModeHint">Colete círculos brilhantes e evite formas vermelhas.</p>
+              </div>
+              <div class="battle-stats">
+                <div><span>Pontos</span><strong id="scoreValue">0</strong></div>
+                <div><span>Combo</span><strong id="comboValue">x1</strong></div>
+                <div><span>Tempo</span><strong id="timeValue">60</strong></div>
+                <div><span>Vida</span><strong id="hpValue">100</strong></div>
+              </div>
+              <button class="primary" id="restartBtn" type="button">Recomeçar</button>
+            </aside>
+            <div class="arena-wrap">
+              <canvas id="gameCanvas" width="960" height="620"></canvas>
+              <div class="game-overlay active" id="gameOverlay">
+                <strong id="overlayTitle">Preparado?</strong>
+                <span id="overlayText">Clique em jogar para começar.</span>
+                <button class="primary big" id="startRoundBtn" type="button">Jogar</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Navegação principal">
+        <button class="nav-item active" data-open="lobbyScreen" type="button"><span>⌂</span>Lobby</button>
+        <button class="nav-item" data-open="modesScreen" type="button"><span>◆</span>Modos</button>
+        <button class="nav-item" data-open="shopScreen" type="button"><span>▣</span>Loja</button>
+        <button class="nav-item" data-open="indexScreen" type="button"><span>✦</span>Index</button>
+      </nav>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
